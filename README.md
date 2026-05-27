@@ -24,57 +24,93 @@ that can spawn a process and read/write lines can implement another, see
 ## Prerequisites
 
 - `circ-compile` on your `PATH`, or point `CIRC_COMPILE_BIN` at the binary.
-- TypeScript binding: Node >= 22.6 (uses built-in type stripping and `node:test`; no dependencies).
+- TypeScript binding: Bun >= 1.0 or Node >= 22. No runtime dependencies.
 - Zig binding: Zig 0.15.x.
 
 ## Layout
 
 ```
 circuits/              shared example .circ files (and.circ, full_adder.circ)
-ts/                    TypeScript binding + node:test examples
-zig/                   Zig binding + std.testing examples
+ts/                    TypeScript binding + bun:test examples
+zig/src/               Zig binding + std.testing examples
 docs/writing-a-binding.md   how to implement a binding in a new language
 ```
 
 ## TypeScript
 
-```ts
-import { load } from "circ-test";
+**Install:**
 
-const dut = await load("circuits/and.circ");
-await dut.set("a", 1);
-await dut.set("b", 1);
-await dut.settle();
-console.log(await dut.getInt("out")); // 1n
-await dut.close();
+```sh
+bun add circ-test
+# or
+npm install circ-test
 ```
 
-Run the examples (no install needed):
+**Use in your tests:**
+
+```ts
+import { test, expect } from "bun:test";
+import { load } from "circ-test";
+
+test("and gate", async () => {
+  const dut = await load("circuits/and.circ");
+  try {
+    await dut.set("a", 1);
+    await dut.set("b", 1);
+    await dut.settle();
+    expect(await dut.getInt("out")).toBe(1n);
+  } finally {
+    await dut.close();
+  }
+});
+```
+
+Works with any test runner (bun:test, vitest, node:test). The binding has no test-runner dependency.
+
+**Run the bundled examples:**
 
 ```sh
 cd ts
-node --test test/*.test.ts          # add CIRC_COMPILE_BIN=... if not on PATH
+bun test                            # add CIRC_COMPILE_BIN=... if not on PATH
 ```
-
-`vitest` is a drop-in alternative if you prefer it; the binding has no test-runner dependency.
 
 ## Zig
 
-```zig
-const circ = @import("circ_test");
-
-var dut = try circ.Dut.load(allocator, "circuits/and.circ");
-defer dut.close();
-try dut.set("a", 1);
-try dut.set("b", 1);
-try dut.settle();
-try std.testing.expectEqual(@as(u64, 1), try dut.getInt("out"));
-```
-
-Run the examples:
+**Install:**
 
 ```sh
-cd zig
+zig fetch --save https://github.com/jeffersonmourak/circ-test/archive/refs/tags/v0.0.2.tar.gz
+```
+
+Add the module to your `build.zig`:
+
+```zig
+const circ_test = b.dependency("circ_test", .{
+    .target = target,
+    .optimize = optimize,
+});
+your_module.addImport("circ_test", circ_test.module("circ_test"));
+```
+
+**Use in your tests:**
+
+```zig
+const std = @import("std");
+const circ = @import("circ_test");
+
+test "and gate" {
+    var dut = try circ.Dut.load(std.testing.allocator, "circuits/and.circ");
+    defer dut.close();
+    try dut.set("a", 1);
+    try dut.set("b", 1);
+    try dut.settle();
+    try std.testing.expectEqual(@as(u64, 1), try dut.getInt("out"));
+}
+```
+
+**Run the bundled examples:**
+
+```sh
 zig build test                      # add CIRC_COMPILE_BIN=... if not on PATH
 ```
 
