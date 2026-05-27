@@ -1,20 +1,46 @@
 {
   "name": "circ-test",
-  "version": "0.1.0",
+  "version": "0.0.2",
   "type": "module",
   "description": "Drive .circ circuits via `circ-compile --sim` for behavioral testing.",
-  "main": "src/index.ts",
-  "types": "src/index.ts",
+  "license": "GPL-3.0-or-later",
+  "author": "Jefferson Oliveira <jeffersonmourak@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jeffersonmourak/circ-test.git",
+    "directory": "ts"
+  },
+  "keywords": [
+    "circ",
+    "circuit",
+    "simulation",
+    "test",
+    "hardware",
+    "digital-logic"
+  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "exports": {
-    ".": "./src/index.ts"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
   },
   "files": [
-    "src"
+    "dist"
   ],
   "scripts": {
-    "test": "node --test test/*.test.ts"
+    "build": "tsc -p tsconfig.build.json",
+    "prepublishOnly": "bun run build",
+    "test": "bun test"
   },
   "engines": {
-    "node": ">=22.6"
+    "node": ">=22.0.0",
+    "bun": ">=1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.1",
+    "bun-types": "^1.3.0",
+    "typescript": "^5.5.0"
   }
 }

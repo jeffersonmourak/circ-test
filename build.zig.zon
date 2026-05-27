@@ -1,11 +1,12 @@
 .{
     .name = .circ_test,
-    .version = "0.1.0",
+    .version = "0.0.2",
     .fingerprint = 0xfaac57a3e7966453,
     .minimum_zig_version = "0.15.0",
+    .description = "Drive .circ circuits via circ-compile --sim for behavioral testing.",
     .paths = .{
         "build.zig",
         "build.zig.zon",
-        "src",
+        "zig/src",
     },
 }

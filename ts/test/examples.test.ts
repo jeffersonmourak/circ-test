@@ -1,5 +1,4 @@
-import test from "node:test";
-import assert from "node:assert/strict";
+import { test, expect } from "bun:test";
 import { load } from "../src/index.ts";
 
 const AND = new URL("../../circuits/and.circ", import.meta.url).pathname;
@@ -13,7 +12,7 @@ test("and gate: exhaustive a & b", async () => {
         await dut.set("a", a);
         await dut.set("b", b);
         await dut.settle();
-        assert.equal(await dut.getInt("out"), BigInt(a & b));
+        expect(await dut.getInt("out")).toBe(BigInt(a & b));
       }
     }
   } finally {
@@ -29,8 +28,8 @@ test("full adder: sum and carry via eval, computed reference", async () => {
         for (let cin = 0; cin <= 1; cin++) {
           const r = await dut.eval({ a, b, cin }, ["sum", "cout"]);
           const total = a + b + cin;
-          assert.equal(r.sum.value, BigInt(total & 1), `sum for ${a}+${b}+${cin}`);
-          assert.equal(r.cout.value, BigInt(total >> 1), `cout for ${a}+${b}+${cin}`);
+          expect(r.sum.value).toBe(BigInt(total & 1));
+          expect(r.cout.value).toBe(BigInt(total >> 1));
         }
       }
     }
@@ -45,7 +44,7 @@ test("undefined input propagates to undefined output", async () => {
     await dut.setUndefined("a");
     await dut.set("b", 1);
     await dut.settle();
-    assert.equal(await dut.isUndefined("out"), true);
+    expect(await dut.isUndefined("out")).toBe(true);
   } finally {
     await dut.close();
   }

@@ -75,7 +75,7 @@ export class Dut {
     child.stderr.setEncoding("utf8");
     child.stdout.on("data", (d: string) => reader.feed(d));
     child.stderr.on("data", (d: string) => (stderr += d));
-    child.on("error", (e) => {
+    child.on("error", (e: Error) => {
       spawnError = e;
       reader.end();
     });

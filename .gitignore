@@ -4,8 +4,8 @@ ts/dist/
 *.tsbuildinfo
 
 # Zig
-zig/.zig-cache/
-zig/zig-out/
+.zig-cache/
+zig-out/
 
 # OS
 .DS_Store
