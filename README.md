@@ -91,3 +91,8 @@ The wire protocol (`proto=1`) is specified in the compiler repo at
 `DOCS/sim-protocol.md`. Each binding checks the `proto` version in the
 handshake and refuses a mismatch, so a binding and a compiler that drift apart
 fail loudly at startup rather than silently misbehaving.
+
+## License
+
+This project is licensed under the GNU General Public License v3.0 or later.
+See the [LICENSE](LICENSE) file for the full text.
