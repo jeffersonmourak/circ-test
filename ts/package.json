@@ -1,0 +1,20 @@
+{
+  "name": "circ-test",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Drive .circ circuits via `circ-compile --sim` for behavioral testing.",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.ts"
+  },
+  "engines": {
+    "node": ">=22.6"
+  }
+}

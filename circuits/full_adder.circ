@@ -1,0 +1,12 @@
+// 1-bit full adder from builtin xor/and/or macros.
+// sum = a ^ b ^ cin;  cout = (a & b) | ((a ^ b) & cin).
+input a
+input b
+input cin
+xor ab(a=a, b=b)
+and ab_and(a=a, b=b)
+xor sum_bit(a=ab.out, b=cin)
+and ab_cin(a=ab.out, b=cin)
+or carry(a=ab_and.out, b=ab_cin.out)
+output sum(in=sum_bit.out)
+output cout(in=carry.out)

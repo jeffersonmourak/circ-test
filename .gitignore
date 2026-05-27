@@ -1,0 +1,11 @@
+# TypeScript / Node
+ts/node_modules/
+ts/dist/
+*.tsbuildinfo
+
+# Zig
+zig/.zig-cache/
+zig/zig-out/
+
+# OS
+.DS_Store

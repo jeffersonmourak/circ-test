@@ -1,0 +1,5 @@
+// 2-input AND gate. Pins: a, b (inputs), out (output).
+input a
+input b
+and g(a=a, b=b)
+output out(in=g.out)
